@@ -95,16 +95,6 @@ function TaskList({ reload, triggerReload }) {
           </p>
 
           <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              className="primary"
-              onClick={() => {
-                setEditingId(task.id);
-                setEditTitle(task.title);
-              }}
-            >
-              ✏️ Edit
-            </button>
-
             <button className="toggle" onClick={() => toggleStatus(task)}>
               🔄 Toggle
             </button>
