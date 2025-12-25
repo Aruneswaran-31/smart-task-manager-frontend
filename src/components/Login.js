@@ -2,31 +2,56 @@ import { useState } from "react";
 import api from "../api";
 
 function Login({ setUser }) {
-  const [data, setData] = useState({ email: "", password: "" });
-
-  const handleChange = (e) =>
-    setData({ ...data, [e.target.name]: e.target.value });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
+    setError("");
 
-  const res = await api.post("/auth/login", data);
+    try {
+      const res = await api.post("/auth/login", {
+        email,
+        password,
+      });
 
-  // 🔥 STORE TOKEN AUTOMATICALLY
-  localStorage.setItem("token", res.data.token);
+      // ✅ SAVE TOKEN
+      localStorage.setItem("token", res.data.token);
 
-  setUser(res.data.user);
-};
+      // ✅ SET USER STATE (THIS WAS MISSING)
+      setUser(res.data.user);
+
+    } catch (err) {
+      setError("Invalid email or password");
+    }
+  };
 
   return (
-    <form className="card" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="card">
       <h3>Login</h3>
-      <input name="email" placeholder="Email" onChange={handleChange} required />
-      <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+
       <button className="primary">Login</button>
     </form>
   );
 }
-
 
 export default Login;
