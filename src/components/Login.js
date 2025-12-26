@@ -6,26 +6,27 @@ function Login({ setUser }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    try {
-      const res = await api.post("/auth/login", {
-        email,
-        password,
-      });
+  try {
+    const res = await api.post("/auth/login", {
+      email,
+      password,
+    });
 
-      // ✅ SAVE TOKEN
-      localStorage.setItem("token", res.data.token);
+    localStorage.setItem("token", res.data.token);
 
-      // ✅ SET USER STATE (THIS WAS MISSING)
-      setUser(res.data.user);
+    alert("Login successful ✅");   // ✅ SIMPLE + RELIABLE
 
-    } catch (err) {
-      setError("Invalid email or password");
-    }
-  };
+    setUser(res.data.user);
+
+  } catch (err) {
+    setError("Invalid email or password");
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit} className="card">
