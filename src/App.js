@@ -57,7 +57,7 @@ function App() {
             }}
           />
         ) : (
-          <Register onRegister={() => showToast("Registered successfully 🎉")} />
+          <Register onRegister={() => showToast("Registered successfully 🎉")} setUser={setUser}/>
         )}
 
         {toast && <div className={`toast ${toast.type}`}>{toast.message}</div>}
