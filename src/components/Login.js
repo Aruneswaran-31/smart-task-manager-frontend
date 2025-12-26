@@ -34,20 +34,24 @@ function Login({ setUser }) {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
+  type="email"
+  name="email"                 // ✅ REQUIRED
+  autoComplete="email"         // ✅ HELPS BROWSER
+  placeholder="Email"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  required
+/>
 
       <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
+  type="password"
+  name="password"
+  autoComplete="current-password"
+  placeholder="Password"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  required
+/>
 
       <button className="primary">Login</button>
     </form>
