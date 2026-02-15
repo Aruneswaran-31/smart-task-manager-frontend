@@ -5,7 +5,6 @@ function TaskList({ reload, triggerReload }) {
   const [tasks, setTasks] = useState([]);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("none");
-  const [editingId, setEditingId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
 
   const loadTasks = async () => {
@@ -31,14 +30,6 @@ function TaskList({ reload, triggerReload }) {
 
   const deleteTask = async (id) => {
     await api.delete(`/tasks/${id}`);
-    triggerReload();
-  };
-
-  const saveEdit = async (task) => {
-    await api.put(`/tasks/${task.id}`, {
-      title: editTitle,
-    });
-    setEditingId(null);
     triggerReload();
   };
 
