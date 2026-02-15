@@ -5,7 +5,6 @@ function TaskList({ reload, triggerReload }) {
   const [tasks, setTasks] = useState([]);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("none");
-  const [editTitle, setEditTitle] = useState("");
 
   const loadTasks = async () => {
     const res = await api.get("/tasks");
@@ -97,20 +96,16 @@ function TaskList({ reload, triggerReload }) {
 
           <div style={{ display: "flex", gap: "10px" }}>
             <button
-              className="primary"
-              onClick={() => {
-                setEditingId(task.id);
-                setEditTitle(task.title);
-              }}
+              className="toggle"
+              onClick={() => toggleStatus(task)}
             >
-              ✏️ Edit
-            </button>
-
-            <button className="toggle" onClick={() => toggleStatus(task)}>
               🔄 Toggle
             </button>
 
-            <button className="danger" onClick={() => deleteTask(task.id)}>
+            <button
+              className="danger"
+              onClick={() => deleteTask(task.id)}
+            >
               ❌ Delete
             </button>
           </div>
