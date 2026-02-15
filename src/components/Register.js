@@ -1,24 +1,44 @@
 import { useState } from "react";
-import api from "../api";
+import { supabase } from "../supabase";
 
-function Register() {
-  const [data, setData] = useState({ name:"", email:"", password:"" });
-
-  const handleChange = (e) =>
-    setData({ ...data, [e.target.name]: e.target.value });
+function Register({ setUser }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await api.post("/auth/register", data);
-    alert("Registered successfully");
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("Registered successfully!");
+      setUser(data.user);
+    }
   };
 
   return (
-    <form className="card" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="card">
       <h3>Register</h3>
-      <input name="name" placeholder="Name" onChange={handleChange} required />
-      <input name="email" placeholder="Email" onChange={handleChange} required />
-      <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+
+      <input
+        type="email"
+        placeholder="Email"
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+
       <button className="primary">Register</button>
     </form>
   );

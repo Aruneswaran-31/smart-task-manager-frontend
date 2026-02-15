@@ -1,15 +1,8 @@
-import axios from "axios";
+import { createClient } from "@supabase/supabase-js";
 
-const api = axios.create({
-  baseURL: "https://smart-task-backend-production-ff57.up.railway.app",
-});
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-export default api;
+export default supabase;

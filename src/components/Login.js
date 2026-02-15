@@ -1,32 +1,46 @@
 import { useState } from "react";
-import api from "../api";
+import { supabase } from "../supabase";
 
 function Login({ setUser }) {
-  const [data, setData] = useState({ email: "", password: "" });
-
-  const handleChange = (e) =>
-    setData({ ...data, [e.target.name]: e.target.value });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const res = await api.post("/auth/login", data);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-  // 🔥 STORE TOKEN AUTOMATICALLY
-  localStorage.setItem("token", res.data.token);
-
-  setUser(res.data.user);
-};
+    if (error) {
+      alert(error.message);
+    } else {
+      setUser(data.user);
+    }
+  };
 
   return (
-    <form className="card" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="card">
       <h3>Login</h3>
-      <input name="email" placeholder="Email" onChange={handleChange} required />
-      <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+
+      <input
+        type="email"
+        placeholder="Email"
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+
       <button className="primary">Login</button>
     </form>
   );
 }
-
 
 export default Login;
