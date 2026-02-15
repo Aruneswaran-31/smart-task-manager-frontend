@@ -1,22 +1,26 @@
 import { useState } from "react";
-import { supabase } from "../supabase";
+import api from "../api";
 
 function Login({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const res = await api.post("/auth/login", {
+        email,
+        password,
+      });
 
-    if (error) {
-      alert(error.message);
-    } else {
-      setUser(data.user);
+      localStorage.setItem("token", res.data.token);
+      setUser(res.data.user);
+
+    } catch (err) {
+      setError("Invalid email or password");
     }
   };
 
@@ -24,9 +28,12 @@ function Login({ setUser }) {
     <form onSubmit={handleSubmit} className="card">
       <h3>Login</h3>
 
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
       <input
         type="email"
         placeholder="Email"
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
       />
@@ -34,6 +41,7 @@ function Login({ setUser }) {
       <input
         type="password"
         placeholder="Password"
+        value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
       />

@@ -1,6 +1,15 @@
-import { createClient } from "@supabase/supabase-js";
+import axios from "axios";
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+const api = axios.create({
+  baseURL: "https://smart-task-backend-production-ff57.up.railway.app",
+});
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export default api;

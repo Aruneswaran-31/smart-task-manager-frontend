@@ -16,8 +16,11 @@ function TaskForm({ refresh }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     await api.post("/tasks", task);
+
     refresh();
+
     setTask({
       title: "",
       description: "",
@@ -28,7 +31,7 @@ function TaskForm({ refresh }) {
   };
 
   return (
-    <form className="card" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="card">
       <h3>Add Task</h3>
 
       <input name="title" placeholder="Title" value={task.title} onChange={handleChange} required />

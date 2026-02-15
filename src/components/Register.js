@@ -1,23 +1,25 @@
 import { useState } from "react";
-import { supabase } from "../supabase";
+import api from "../api";
 
-function Register({ setUser }) {
+function Register({ onRegister }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      await api.post("/auth/register", {
+        name,
+        email,
+        password,
+      });
 
-    if (error) {
-      alert(error.message);
-    } else {
-      alert("Registered successfully!");
-      setUser(data.user);
+      onRegister();
+
+    } catch (err) {
+      alert("Registration failed");
     }
   };
 
@@ -26,8 +28,16 @@ function Register({ setUser }) {
       <h3>Register</h3>
 
       <input
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+
+      <input
         type="email"
         placeholder="Email"
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
       />
@@ -35,6 +45,7 @@ function Register({ setUser }) {
       <input
         type="password"
         placeholder="Password"
+        value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
       />
